@@ -38,4 +38,5 @@ private:
     void UpdatePrintableSize();
     bool CellExists(Position pos) const;
     void Touch(Position pos);
+    void ControlPosition(Position pos) const;
 };

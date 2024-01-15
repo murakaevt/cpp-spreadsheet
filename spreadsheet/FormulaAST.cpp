@@ -161,8 +161,7 @@ public:
         switch (type_)
         {
         case Type::Add:
-            return (lhs_.get()->Evaluate(func) + rhs_.get()->Evaluate(func));
-            break;
+            return (lhs_.get()->Evaluate(func) + rhs_.get()->Evaluate(func));            
         case Type::Subtract:
             return (lhs_.get()->Evaluate(func) - rhs_.get()->Evaluate(func));
             break;
@@ -229,8 +228,7 @@ public:
         switch (type_)
         {
         case Type::UnaryMinus:
-            return (-1.0) * operand_->Evaluate(func);
-            break;
+            return (-1.0) * operand_->Evaluate(func);            
         default:
             return operand_->Evaluate(func);
             break;

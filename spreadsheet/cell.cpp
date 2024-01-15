@@ -6,6 +6,8 @@
 #include <optional>
 #include <cmath>
 
+using namespace std::literals;
+
 Cell::Cell(SheetInterface& sheet)
     : sheet_(sheet)
 {}
@@ -20,8 +22,7 @@ Cell::~Cell()
 
 void Cell::Set(const std::string& text)
 {
-    using namespace std::literals; // Потому что в Set задается формула или текст, можно конечно реализовать в методе, который направлен на создания ячейки, но я отталкивался от этого
-    // Лично я не особо вижу ошибку создаваить тут проверку
+    using namespace std::literals; 
     if (text.empty())
     {
         impl_ = std::make_unique<EmptyImpl>();
@@ -45,7 +46,7 @@ void Cell::Set(const std::string& text)
 
 void Cell::Clear()
 {
-    Set(nullptr);
+    Set("");
 }
 
 Cell::Value Cell::GetValue() const
@@ -98,8 +99,6 @@ CellType Cell::EmptyImpl::IGetType() const
 }
 std::string Cell::EmptyImpl::IGetText() const
 {
-    using namespace std::literals;
-
     return ""s;
 }
 CellInterface::Value Cell::EmptyImpl::IGetValue() const

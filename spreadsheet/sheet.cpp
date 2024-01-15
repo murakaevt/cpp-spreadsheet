@@ -60,10 +60,7 @@ void Sheet::SetCell(Position pos, std::string text)
 
 const CellInterface* Sheet::GetCell(Position pos) const
 {
-    if (!pos.IsValid())
-    {
-        throw InvalidPositionException("Invalid position");
-    }
+    ControlPosition(pos);
 
     if (CellExists(pos))
     {
@@ -77,10 +74,8 @@ const CellInterface* Sheet::GetCell(Position pos) const
 
 CellInterface* Sheet::GetCell(Position pos)
 {
-    if (!pos.IsValid())
-    {
-        throw InvalidPositionException("Invalid position");
-    }
+    ControlPosition(pos);
+
     if (CellExists(pos))
     {
         if (sheet_.at(pos.row).at(pos.col))
@@ -93,10 +88,7 @@ CellInterface* Sheet::GetCell(Position pos)
 
 void Sheet::ClearCell(Position pos)
 {
-    if (!pos.IsValid())
-    {
-        throw InvalidPositionException("Invalid position");
-    }
+    ControlPosition(pos);
 
     if (CellExists(pos))
     {
@@ -121,19 +113,19 @@ Size Sheet::GetPrintableSize() const
 
 void Sheet::PrintValues(std::ostream& output) const
 {
-    for (int x = 0; x < max_row_; ++x)
+    for (int row = 0; row < max_row_; ++row)
     {
         bool need_separator = false;
-        for (int y = 0; y < max_col_; ++y)
+        for (int col = 0; col < max_col_; ++col)
         {
             if (need_separator)
             {
                 output << '\t';
             }
             need_separator = true;
-            if ((y < static_cast<int>(sheet_.at(x).size())) && sheet_.at(x).at(y))
+            if ((col < static_cast<int>(sheet_.at(row).size())) && sheet_.at(row).at(col))
             {
-                auto value = sheet_.at(x).at(y)->GetValue();
+                auto value = sheet_.at(row).at(col)->GetValue();
                 if (std::holds_alternative<std::string>(value))
                 {
                     output << std::get<std::string>(value);
@@ -154,19 +146,19 @@ void Sheet::PrintValues(std::ostream& output) const
 
 void Sheet::PrintTexts(std::ostream& output) const
 {
-    for (int x = 0; x < max_row_; ++x)
+    for (int row = 0; row < max_row_; ++row)
     {
         bool need_separator = false;
-        for (int y = 0; y < max_col_; ++y)
+        for (int col = 0; col < max_col_; ++col)
         {
             if (need_separator)
             {
                 output << '\t';
             }
             need_separator = true;
-            if ((y < static_cast<int>(sheet_.at(x).size())) && sheet_.at(x).at(y))
+            if ((col < static_cast<int>(sheet_.at(row).size())) && sheet_.at(row).at(col))
             {
-                output << sheet_.at(x).at(y)->GetText();
+                output << sheet_.at(row).at(col)->GetText();
             }
         }
         output << '\n';
@@ -246,5 +238,12 @@ void Sheet::Touch(Position pos)
     {
         sheet_.at(pos.row).reserve(pos.col + 1);
         sheet_.at(pos.row).resize(pos.col + 1);
+    }
+}
+
+void Sheet::ControlPosition(Position pos) const {
+    if (!pos.IsValid())
+    {
+        throw InvalidPositionException("Invalid position");
     }
 }
